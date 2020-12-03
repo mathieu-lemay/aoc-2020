@@ -3,8 +3,30 @@ use std::time::Instant;
 
 use aoc_2020::get_input;
 
+fn is_tree(row: &str, row_num: usize, xmult: usize) -> bool {
+    row.chars().nth((row_num * xmult) % row.len()).unwrap() == '#'
+}
+
 fn solve(input: &[String]) -> (impl Display, impl Display) {
-    (0, 0)
+    let number1 = input
+        .iter()
+        .enumerate()
+        .filter(|(idx, row)| is_tree(row, *idx, 3))
+        .count();
+
+    let number2: usize = vec![(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)]
+        .iter()
+        .map(|(x, y)| {
+            input
+                .iter()
+                .step_by(*y)
+                .enumerate()
+                .filter(|(idx, row)| is_tree(row, *idx, *x))
+                .count()
+        })
+        .product();
+
+    (number1, number2)
 }
 
 fn main() {
