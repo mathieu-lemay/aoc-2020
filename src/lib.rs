@@ -4,7 +4,7 @@ use std::io::{BufRead, BufReader};
 pub fn get_input(filename: &str) -> Vec<String> {
     let file = match File::open(format!("input/{}", filename)) {
         Ok(file) => file,
-        Err(error) => panic!("Unable to open file {}: {:?}", filename, error),
+        Err(error) => panic!("Unable to open file {}: {}", filename, error),
     };
 
     let reader = BufReader::new(file);
