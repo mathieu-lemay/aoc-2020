@@ -12,7 +12,7 @@ pub fn get_input(filename: &str) -> Vec<String> {
     reader.lines().map(|l| l.unwrap()).collect()
 }
 
-pub fn get_input_as_int(filename: &str) -> Vec<i32> {
+pub fn get_input_as_int(filename: &str) -> Vec<i64> {
     get_input(filename)
         .iter()
         .map(|i| i.parse().unwrap())
