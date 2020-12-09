@@ -5,15 +5,15 @@ fn main() {
     let input = get_input_as_int("d01.txt");
 
     for values in input.iter().combinations(2) {
-        if values.iter().map(|i| *i).sum::<i32>() == 2020 {
-            println!("Part 1: {}", values.into_iter().product::<i32>());
+        if values.iter().map(|i| *i).sum::<i64>() == 2020 {
+            println!("Part 1: {}", values.into_iter().product::<i64>());
             break;
         }
     }
 
     for values in input.iter().combinations(3) {
-        if values.iter().map(|i| *i).sum::<i32>() == 2020 {
-            println!("Part 2: {}", values.into_iter().product::<i32>());
+        if values.iter().map(|i| *i).sum::<i64>() == 2020 {
+            println!("Part 2: {}", values.into_iter().product::<i64>());
             break;
         }
     }

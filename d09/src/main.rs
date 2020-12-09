@@ -1,60 +1,43 @@
+use std::collections::VecDeque;
 use std::fmt::Display;
 use std::time::Instant;
 
 use aoc_2020::get_input_as_int;
-use std::collections::{HashSet, VecDeque};
-
-fn get_valid_numbers(sample: &VecDeque<i64>) -> HashSet<i64> {
-    let mut values = HashSet::with_capacity(sample.len().pow(2) / 2);
-
-    for i in sample.iter().take(sample.len() - 1) {
-        for j in sample.iter().skip(1) {
-            if i != j {
-                values.insert(i + j);
-            }
-        }
-    }
-
-    values
-}
 
 fn part1(input: &[i64], sample_size: usize) -> i64 {
     let mut sample: VecDeque<i64> = input.iter().take(sample_size).copied().collect();
 
-    for i in input.iter().skip(sample_size) {
-        let valid = get_valid_numbers(&sample);
-
-        if !valid.contains(i) {
-            return *i;
+    for tgt in input.iter().skip(sample_size) {
+        let valid = sample.iter().any(|n| sample.contains(&(tgt - n)));
+        if valid {
+            sample.pop_front();
+            sample.push_back(*tgt);
+        } else {
+            return *tgt;
         }
-
-        sample.pop_front();
-        sample.push_back(*i);
     }
 
     panic!("Invalid number not found");
 }
 
 fn part2(input: &[i64], target: i64) -> (i64, i64) {
-    for idx in 0..input.len() {
-        let n1 = input.get(idx).copied().unwrap();
-        let mut n2 = 0;
-        let mut s = n1;
+    let mut s = 0;
+    let mut nums = VecDeque::new();
 
-        if n1 >= target {
+    for n in input.iter().copied() {
+        if n >= target {
             break;
         }
 
-        for n in input.iter().skip(idx + 1).copied() {
-            s += n;
-            if n > n2 {
-                n2 = n;
-            }
-            if s == target {
-                return (n1, n2);
-            } else if s > target {
-                continue;
-            }
+        s += n;
+        nums.push_back(n);
+
+        while s > target {
+            let k = nums.pop_front().unwrap();
+            s -= k;
+        }
+        if s == target {
+            return (*nums.iter().min().unwrap(), *nums.iter().max().unwrap());
         }
     }
 
