@@ -1,10 +1,18 @@
+#[macro_use]
+extern crate lazy_static;
+
+use std::collections::{HashMap, VecDeque};
 use std::fmt::Display;
+use std::sync::Mutex;
 use std::time::Instant;
 
 use itertools::Itertools;
 
 use aoc_2020::get_input_as_int;
-use std::collections::VecDeque;
+
+lazy_static! {
+    static ref TRIB_CACHE: Mutex<HashMap<i64, i64>> = Mutex::new(HashMap::new());
+}
 
 fn part1(input: &[i64]) -> i64 {
     let values = input.iter().copied().sorted().collect::<Vec<i64>>();
@@ -25,6 +33,22 @@ fn part1(input: &[i64]) -> i64 {
     }
 
     d1 * d3
+}
+
+fn tribonacci(n: i64) -> i64 {
+    if n <= 2 {
+        return n;
+    }
+
+    if let Some(&v) = TRIB_CACHE.lock().unwrap().get(&n) {
+        return v;
+    }
+
+    let v = tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3);
+
+    TRIB_CACHE.lock().unwrap().insert(n, v);
+
+    v
 }
 
 fn part2(input: &[i64]) -> i64 {
@@ -53,13 +77,7 @@ fn part2(input: &[i64]) -> i64 {
     values
         .iter()
         .filter(|&&t| t.0 == 1)
-        .map(|&t| match t.1 {
-            1 => 1,
-            2 => 2,
-            3 => 4,
-            4 => 7,
-            _ => panic!("Invalid group length"),
-        })
+        .map(|&t| tribonacci(t.1))
         .product::<i64>()
 }
 
