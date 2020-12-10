@@ -8,3 +8,4 @@ edition = "2018"
 
 [dependencies]
 aoc-2020 = { path = ".." }
+itertools = "^0.9"
