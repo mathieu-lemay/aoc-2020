@@ -11,11 +11,11 @@ use itertools::Itertools;
 use aoc_2020::get_input_as_int;
 
 lazy_static! {
-    static ref TRIB_CACHE: Mutex<HashMap<i64, i64>> = Mutex::new(HashMap::new());
+    static ref TRIB_CACHE: Mutex<HashMap<u64, u64>> = Mutex::new(HashMap::new());
 }
 
-fn part1(input: &[i64]) -> i64 {
-    let values = input.iter().copied().sorted().collect::<Vec<i64>>();
+fn part1(input: &[u64]) -> u64 {
+    let values = input.iter().copied().sorted().collect::<Vec<u64>>();
 
     let mut d1 = 0;
     let mut d3 = 1;
@@ -35,7 +35,7 @@ fn part1(input: &[i64]) -> i64 {
     d1 * d3
 }
 
-fn tribonacci(n: i64) -> i64 {
+fn tribonacci(n: u64) -> u64 {
     if n <= 2 {
         return n;
     }
@@ -51,13 +51,13 @@ fn tribonacci(n: i64) -> i64 {
     v
 }
 
-fn part2(input: &[i64]) -> i64 {
+fn part2(input: &[u64]) -> u64 {
     let mut values = input
         .iter()
         .sorted()
-        .tuple_windows::<(&i64, &i64)>()
+        .tuple_windows::<(&u64, &u64)>()
         .map(|(i, j)| j - i)
-        .collect::<VecDeque<i64>>();
+        .collect::<VecDeque<u64>>();
     values.push_front(1);
 
     // See https://stackoverflow.com/a/32717990
@@ -72,16 +72,16 @@ fn part2(input: &[i64]) -> i64 {
                 Err(((c, n), (d, m)))
             }
         })
-        .collect::<Vec<(i64, i64)>>();
+        .collect::<Vec<(u64, u64)>>();
 
     values
         .iter()
         .filter(|&&t| t.0 == 1)
         .map(|&t| tribonacci(t.1))
-        .product::<i64>()
+        .product::<u64>()
 }
 
-fn solve(input: &[i64]) -> (impl Display, impl Display) {
+fn solve(input: &[u64]) -> (impl Display, impl Display) {
     let p1 = part1(input);
     let p2 = part2(input);
 
@@ -143,7 +143,7 @@ mod tests {
         let input = input
             .split("\n")
             .map(|s| s.parse().unwrap())
-            .collect::<Vec<i64>>();
+            .collect::<Vec<u64>>();
         let res = part1(&input);
         assert_eq!(220, res);
     }
@@ -165,7 +165,7 @@ mod tests {
         let input = input
             .split("\n")
             .map(|s| s.parse().unwrap())
-            .collect::<Vec<i64>>();
+            .collect::<Vec<u64>>();
         let res = part2(&input);
         assert_eq!(8, res);
     }
@@ -207,7 +207,7 @@ mod tests {
         let input = input
             .split("\n")
             .map(|s| s.parse().unwrap())
-            .collect::<Vec<i64>>();
+            .collect::<Vec<u64>>();
         let res = part2(&input);
         assert_eq!(19208, res);
     }
